@@ -1,4 +1,5 @@
 :root {
+  --sidebar-width: 392px;
   --color-bg: #f5f2eb;
   --color-surface: #ffffff;
   --color-surface-soft: #eee8dc;
@@ -54,15 +55,21 @@ button:disabled {
 }
 
 .page-shell {
-  width: min(1220px, calc(100% - 40px));
-  margin: 0 auto;
-  padding: 28px 0 40px;
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(28px, 4vw, 64px);
+  margin: 0;
+  padding: 0;
 }
 
 .app-header {
-  min-height: 92px;
-  margin-bottom: 22px;
-  padding: 18px 0 20px;
+  grid-column: 2;
+  min-height: 132px;
+  margin: 0;
+  padding: 42px clamp(24px, 4vw, 56px) 20px 0;
   display: flex;
   align-items: center;
   border-bottom: 2px solid rgba(15, 19, 22, 0.08);
@@ -76,7 +83,7 @@ p {
 }
 
 h1 {
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: clamp(42px, 5vw, 72px);
   line-height: 1;
   letter-spacing: 0;
 }
@@ -93,20 +100,23 @@ h3 {
 }
 
 .workspace {
-  display: grid;
-  grid-template-columns: 390px minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
+  display: contents;
 }
 
 .control-panel {
-  min-height: calc(100vh - 190px);
-  padding: 28px;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  max-height: 100vh;
+  padding: 32px;
   display: grid;
   gap: 22px;
   align-content: start;
   background: rgba(255, 255, 255, 0.76);
   box-shadow: var(--shadow-soft);
+  overflow-y: auto;
 }
 
 .panel-heading {
@@ -290,12 +300,16 @@ h3 {
 }
 
 .board-column {
-  width: 100%;
+  grid-column: 2;
+  width: min(940px, 100%);
+  padding: 24px clamp(24px, 4vw, 56px) 56px 0;
+  justify-self: start;
 }
 
 .puzzle-board {
   position: relative;
   width: 100%;
+  max-width: 940px;
   aspect-ratio: 1;
   background:
     linear-gradient(135deg, rgba(216, 209, 197, 0.92), rgba(238, 232, 220, 0.86)),
@@ -339,21 +353,45 @@ h3 {
 }
 
 @media (max-width: 1040px) {
+  :root {
+    --sidebar-width: 100%;
+  }
+
   .page-shell {
+    display: block;
     width: min(100% - 28px, 760px);
-    padding-top: 20px;
+    margin: 0 auto;
+    padding: 20px 0 36px;
+  }
+
+  .app-header {
+    min-height: 88px;
+    padding: 0 0 18px;
   }
 
   .workspace {
+    display: grid;
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .control-panel {
+    position: static;
     min-height: 0;
+    max-height: none;
+    order: 2;
+    padding: 24px;
   }
 
   .board-column {
     order: -1;
+    width: 100%;
+    padding: 0;
+  }
+
+  .puzzle-board {
+    min-width: 0;
+    max-width: 100%;
   }
 }
 
