@@ -16,6 +16,7 @@ export function PuzzlePage() {
   const [speed, setSpeed] = useState(360)
   const [step, setStep] = useState(0)
   const [playing, setPlaying] = useState(false)
+  const [consoleLines, setConsoleLines] = useState<string[]>(['> приложение готово'])
 
   const solved = useMemo(() => isSolved(board), [board])
   const locked = activeAlgorithm !== null || playing
@@ -34,8 +35,10 @@ export function PuzzlePage() {
       const nextStep = step + 1
       setStep(nextStep)
       setBoard(selectedResult.states[nextStep])
+      setConsoleLines((lines) => [...lines.slice(-5), `> ход ${nextStep} из ${lastStep}`])
       if (nextStep >= lastStep) {
         setPlaying(false)
+        setConsoleLines((lines) => [...lines.slice(-5), '> анимация решения завершена'])
       }
     }, speed)
 
@@ -46,6 +49,7 @@ export function PuzzlePage() {
     setActiveAlgorithm(algorithm)
     setPlaying(false)
     setStep(0)
+    setConsoleLines((lines) => [...lines.slice(-5), `> запуск ${algorithm}`])
 
     try {
       const result = algorithm === 'BFS' ? await solveWithBfs(board) : await solveWithDfs(board, depthLimit)
@@ -55,8 +59,18 @@ export function PuzzlePage() {
         setDfsResult(result)
       }
       setSelectedResult(result)
+      setConsoleLines((lines) => [
+        ...lines.slice(-4),
+        `> ${algorithm} посетил ${result.visitedCount} состояний`,
+        result.message ?? `> найдено ходов ${result.moves.length}`,
+      ])
+      if (result.states.length > 1 && result.solvable) {
+        setBoard(result.states[0])
+        setPlaying(true)
+      }
     } catch (error) {
-      console.error(error)
+      const message = error instanceof Error ? error.message : 'неизвестная ошибка'
+      setConsoleLines((lines) => [...lines.slice(-5), `> ошибка ${message}`])
     } finally {
       setActiveAlgorithm(null)
     }
@@ -69,6 +83,7 @@ export function PuzzlePage() {
     setSelectedResult(null)
     setStep(0)
     setPlaying(false)
+    setConsoleLines(['> поле сброшено'])
   }
 
   function shuffle() {
@@ -78,21 +93,13 @@ export function PuzzlePage() {
     setSelectedResult(null)
     setStep(0)
     setPlaying(false)
+    setConsoleLines(['> поле перемешано'])
   }
 
   function handleTileClick(tile: number) {
     setBoard((current) => moveTile(current, tile))
     setSelectedResult(null)
     setStep(0)
-  }
-
-  function playSolution() {
-    if (!selectedResult || selectedResult.states.length <= 1) {
-      return
-    }
-    setBoard(selectedResult.states[0])
-    setStep(0)
-    setPlaying(true)
   }
 
   return (
@@ -105,21 +112,17 @@ export function PuzzlePage() {
         <SolverPanel
           activeAlgorithm={activeAlgorithm}
           bfsResult={bfsResult}
+          consoleLines={consoleLines}
           depthLimit={depthLimit}
           dfsResult={dfsResult}
           disabled={locked}
           onBfs={() => void runSolver('BFS')}
           onDepthLimitChange={setDepthLimit}
           onDfs={() => void runSolver('DFS')}
-          onPlay={playSolution}
           onReset={resetBoard}
           onShuffle={shuffle}
-          onStop={() => setPlaying(false)}
           onSpeedChange={setSpeed}
-          playing={playing}
-          selectedResult={selectedResult}
           speed={speed}
-          step={step}
         />
 
         <div className="board-column" data-solved={solved}>

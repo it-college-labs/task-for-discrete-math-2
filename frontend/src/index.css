@@ -1,5 +1,6 @@
 :root {
-  --sidebar-width: 392px;
+  --sidebar-width: clamp(340px, 22vw, 400px);
+  --header-height: clamp(84px, 12svh, 118px);
   --color-bg: #f5f2eb;
   --color-surface: #ffffff;
   --color-surface-soft: #eee8dc;
@@ -35,6 +36,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background: var(--color-bg);
+  overflow: hidden;
 }
 
 button,
@@ -56,20 +58,21 @@ button:disabled {
 
 .page-shell {
   width: 100%;
-  min-height: 100vh;
+  height: 100svh;
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   grid-template-rows: auto 1fr;
-  column-gap: clamp(28px, 4vw, 64px);
+  column-gap: clamp(24px, 3.2vw, 56px);
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .app-header {
   grid-column: 2;
-  min-height: 132px;
+  height: var(--header-height);
   margin: 0;
-  padding: 42px clamp(24px, 4vw, 56px) 20px 0;
+  padding: clamp(20px, 3svh, 34px) clamp(20px, 3.2vw, 48px) 14px 0;
   display: flex;
   align-items: center;
   border-bottom: 2px solid rgba(15, 19, 22, 0.08);
@@ -83,13 +86,13 @@ p {
 }
 
 h1 {
-  font-size: clamp(42px, 5vw, 72px);
+  font-size: clamp(38px, 4.6vw, 70px);
   line-height: 1;
   letter-spacing: 0;
 }
 
 h2 {
-  font-size: 30px;
+  font-size: clamp(25px, 1.8vw, 30px);
   line-height: 1.12;
   letter-spacing: 0;
 }
@@ -108,15 +111,32 @@ h3 {
   grid-row: 1 / span 2;
   position: sticky;
   top: 0;
-  min-height: 100vh;
-  max-height: 100vh;
-  padding: 32px;
-  display: grid;
-  gap: 22px;
-  align-content: start;
+  height: 100svh;
+  padding: clamp(20px, 3svh, 30px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.7svh, 18px);
   background: rgba(255, 255, 255, 0.76);
   box-shadow: var(--shadow-soft);
-  overflow-y: auto;
+  overflow: hidden;
+}
+
+.sidebar-inner,
+.sidebar-bottom {
+  width: 100%;
+  max-width: 356px;
+  margin-inline: auto;
+}
+
+.sidebar-inner {
+  display: grid;
+  gap: clamp(10px, 1.55svh, 16px);
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  display: grid;
+  gap: clamp(10px, 1.5svh, 14px);
 }
 
 .panel-heading {
@@ -127,14 +147,14 @@ h3 {
 .actions-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 .button {
-  min-height: 58px;
+  min-height: clamp(46px, 6.6svh, 58px);
   border: 2px solid transparent;
   border-radius: var(--radius-sm);
-  padding: 14px 16px;
+  padding: 10px 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -179,14 +199,14 @@ h3 {
 
 .field {
   display: grid;
-  gap: 12px;
+  gap: 6px;
   color: var(--color-muted);
   font-weight: 800;
 }
 
 .field input[type='range'] {
   width: 100%;
-  height: 44px;
+  height: 28px;
   border: 0;
   border-radius: 0;
   accent-color: var(--color-accent);
@@ -225,13 +245,12 @@ h3 {
 
 .compare-strip,
 .insights,
-.timeline-row {
+.solve-actions {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
-.compare-strip,
-.timeline-row {
+.compare-strip {
   grid-template-columns: 1fr 1fr;
 }
 
@@ -241,10 +260,10 @@ h3 {
 
 .solver-badge,
 .metric {
-  min-height: 92px;
+  min-height: clamp(58px, 8svh, 78px);
   border-radius: var(--radius-md);
   background: var(--color-surface-soft);
-  padding: 16px;
+  padding: 12px 14px;
   display: grid;
   align-content: center;
   gap: 4px;
@@ -253,7 +272,7 @@ h3 {
 .solver-badge span,
 .metric span {
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
 }
@@ -261,7 +280,7 @@ h3 {
 .solver-badge strong,
 .metric strong {
   color: var(--color-text);
-  font-size: 24px;
+  font-size: clamp(20px, 1.6vw, 24px);
   line-height: 1.1;
 }
 
@@ -270,46 +289,52 @@ h3 {
   font-weight: 700;
 }
 
-.timeline {
-  display: grid;
-  gap: 14px;
-  padding-top: 2px;
+.solve-actions .button {
+  width: 100%;
 }
 
-.timeline-row {
-  align-items: stretch;
-}
-
-.timeline-row .button {
-  grid-column: 1 / -1;
-}
-
-.progress-track {
-  height: 14px;
-  border-radius: 999px;
+.console-panel {
+  height: clamp(92px, 16svh, 138px);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 5px;
+  color: #f7f2e9;
+  background: #0f1316;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   overflow: hidden;
-  background: var(--color-stone);
 }
 
-.progress-track span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--color-accent);
-  transition: width 220ms ease;
+.console-panel p {
+  color: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .board-column {
   grid-column: 2;
-  width: min(940px, 100%);
-  padding: 24px clamp(24px, 4vw, 56px) 56px 0;
-  justify-self: start;
+  height: calc(100svh - var(--header-height));
+  width: 100%;
+  padding: clamp(12px, 2svh, 22px) clamp(20px, 3.2vw, 48px) clamp(16px, 2.4svh, 28px) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .puzzle-board {
   position: relative;
-  width: 100%;
-  max-width: 940px;
+  width: min(
+    calc(100svh - var(--header-height) - clamp(32px, 4svh, 56px)),
+    calc(100vw - var(--sidebar-width) - clamp(92px, 8vw, 150px)),
+    1280px
+  );
+  min-width: min(600px, 100%);
   aspect-ratio: 1;
   background:
     linear-gradient(135deg, rgba(216, 209, 197, 0.92), rgba(238, 232, 220, 0.86)),
@@ -338,7 +363,7 @@ h3 {
   color: var(--color-text);
   background: var(--color-surface);
   box-shadow: inset 0 -10px 24px rgba(216, 209, 197, 0.48), 0 12px 22px rgba(15, 19, 22, 0.1);
-  font-size: clamp(32px, 4.2vw, 58px);
+  font-size: clamp(34px, 4vw, 66px);
   font-weight: 800;
   transition:
     box-shadow 180ms ease,
@@ -357,8 +382,14 @@ h3 {
     --sidebar-width: 100%;
   }
 
+  body {
+    overflow: auto;
+  }
+
   .page-shell {
     display: block;
+    height: auto;
+    min-height: 100svh;
     width: min(100% - 28px, 760px);
     margin: 0 auto;
     padding: 20px 0 36px;
@@ -377,19 +408,22 @@ h3 {
 
   .control-panel {
     position: static;
+    height: auto;
     min-height: 0;
-    max-height: none;
     order: 2;
     padding: 24px;
+    overflow: visible;
   }
 
   .board-column {
     order: -1;
+    height: auto;
     width: 100%;
     padding: 0;
   }
 
   .puzzle-board {
+    width: 100%;
     min-width: 0;
     max-width: 100%;
   }
