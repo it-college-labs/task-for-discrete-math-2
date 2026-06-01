@@ -44,6 +44,18 @@ class PuzzleSolversTest {
   }
 
   @Test
+  void dfsFindsSimplePathInsideDepthLimit() {
+    PuzzleBoard board = PuzzleBoard.from(
+        List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 15)
+    );
+
+    SolverResult result = PuzzleSolvers.dfs(board, 4);
+
+    assertThat(result.solved()).isTrue();
+    assertThat(result.moves()).containsExactly(Move.RIGHT);
+  }
+
+  @Test
   void boardRejectsInvalidInput() {
     assertThatThrownBy(() -> PuzzleBoard.from(List.of(1, 1, 2)))
         .isInstanceOf(IllegalArgumentException.class);

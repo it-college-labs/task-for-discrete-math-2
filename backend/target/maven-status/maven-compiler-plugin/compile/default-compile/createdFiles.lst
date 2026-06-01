@@ -1,0 +1,11 @@
+ru/discretemath/puzzle/model/PuzzleBoard.class
+ru/discretemath/puzzle/solver/PuzzleSolvers$SearchCounter.class
+ru/discretemath/puzzle/service/PuzzleSolverService.class
+ru/discretemath/puzzle/solver/PuzzleSolvers.class
+ru/discretemath/puzzle/solver/SolverResult.class
+ru/discretemath/puzzle/solver/PuzzleSolvers$Step.class
+ru/discretemath/puzzle/controller/PuzzleController.class
+ru/discretemath/puzzle/model/Move.class
+ru/discretemath/puzzle/model/PuzzleRequest.class
+ru/discretemath/puzzle/PuzzleApplication.class
+ru/discretemath/puzzle/model/PuzzleResponse.class

@@ -46,10 +46,11 @@ export function PuzzlePage() {
   }, [playing, selectedResult, speed, step])
 
   async function runSolver(algorithm: Algorithm) {
+    const label = algorithm === 'BFS' ? 'БФС' : 'ДФС'
     setActiveAlgorithm(algorithm)
     setPlaying(false)
     setStep(0)
-    setConsoleLines((lines) => [...lines.slice(-5), `> запуск ${algorithm}`])
+    setConsoleLines([`> запуск ${label}`, '> ожидание ответа сервера'])
 
     try {
       const result = algorithm === 'BFS' ? await solveWithBfs(board) : await solveWithDfs(board, depthLimit)
@@ -59,14 +60,22 @@ export function PuzzlePage() {
         setDfsResult(result)
       }
       setSelectedResult(result)
+
+      const summary = result.message ?? (
+        result.moves.length === 0
+          ? '> поле уже решено, ходов 0'
+          : `> найдено ходов ${result.moves.length}`
+      )
       setConsoleLines((lines) => [
-        ...lines.slice(-4),
-        `> ${algorithm} посетил ${result.visitedCount} состояний`,
-        result.message ?? `> найдено ходов ${result.moves.length}`,
+        ...lines.slice(-3),
+        `> ${label} посетил ${result.visitedCount} состояний`,
+        summary,
       ])
       if (result.states.length > 1 && result.solvable) {
         setBoard(result.states[0])
         setPlaying(true)
+      } else if (result.states[0]) {
+        setBoard(result.states[0])
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'неизвестная ошибка'
@@ -104,10 +113,6 @@ export function PuzzlePage() {
 
   return (
     <main className="page-shell">
-      <header className="app-header">
-        <h1>Задание ДМ: Пятнашки</h1>
-      </header>
-
       <section className="workspace">
         <SolverPanel
           activeAlgorithm={activeAlgorithm}

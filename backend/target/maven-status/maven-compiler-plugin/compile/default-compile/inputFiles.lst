@@ -1,0 +1,9 @@
+/Users/nksv_ilya/Documents/GitHub/task-for-discrete-math-2/backend/src/main/java/ru/discretemath/puzzle/PuzzleApplication.java
+/Users/nksv_ilya/Documents/GitHub/task-for-discrete-math-2/backend/src/main/java/ru/discretemath/puzzle/controller/PuzzleController.java
+/Users/nksv_ilya/Documents/GitHub/task-for-discrete-math-2/backend/src/main/java/ru/discretemath/puzzle/model/Move.java
+/Users/nksv_ilya/Documents/GitHub/task-for-discrete-math-2/backend/src/main/java/ru/discretemath/puzzle/model/PuzzleBoard.java
+/Users/nksv_ilya/Documents/GitHub/task-for-discrete-math-2/backend/src/main/java/ru/discretemath/puzzle/model/PuzzleRequest.java
+/Users/nksv_ilya/Documents/GitHub/task-for-discrete-math-2/backend/src/main/java/ru/discretemath/puzzle/model/PuzzleResponse.java
+/Users/nksv_ilya/Documents/GitHub/task-for-discrete-math-2/backend/src/main/java/ru/discretemath/puzzle/service/PuzzleSolverService.java
+/Users/nksv_ilya/Documents/GitHub/task-for-discrete-math-2/backend/src/main/java/ru/discretemath/puzzle/solver/PuzzleSolvers.java
+/Users/nksv_ilya/Documents/GitHub/task-for-discrete-math-2/backend/src/main/java/ru/discretemath/puzzle/solver/SolverResult.java

@@ -1,4 +1,5 @@
-import { Brain, GitBranch, RotateCcw, Shuffle } from 'lucide-react'
+import type { ComponentType, CSSProperties } from 'react'
+import { Brain, Clock3, Footprints, GitBranch, Network, RotateCcw, Route, Shuffle, Timer } from 'lucide-react'
 import { Button } from '../../shared/ui/Button'
 import { Metric } from '../../shared/ui/Metric'
 import type { Algorithm, SolverResponse } from '../../entities/puzzle/model'
@@ -34,21 +35,27 @@ export function SolverPanel({
   onShuffle,
   onSpeedChange,
 }: SolverPanelProps) {
+  const depthProgress = `${(depthLimit / 80) * 100}%`
+  const speedProgress = `${((speed - 180) / (620 - 180)) * 100}%`
+
   return (
     <section className="control-panel" aria-label="Панель управления">
-      <div className="sidebar-inner">
-        <div className="panel-heading">
-          <h2>Панель управления</h2>
-        </div>
-
-        <div className="actions-grid">
-        <Button disabled={disabled} icon={Shuffle} onClick={onShuffle}>
-          Перемешать
-        </Button>
-        <Button disabled={disabled} icon={RotateCcw} onClick={onReset}>
-          Сбросить
-        </Button>
+      <div className="panel-heading">
+        <h2>
+          <span>Задание ДМ:</span>
+          <span>Пятнашки</span>
+        </h2>
       </div>
+
+      <div className="sidebar-inner">
+        <div className="actions-grid">
+          <Button disabled={disabled} icon={Shuffle} onClick={onShuffle}>
+            Перемешать
+          </Button>
+          <Button disabled={disabled} icon={RotateCcw} onClick={onReset}>
+            Сбросить
+          </Button>
+        </div>
 
         <label className="field">
           <span>Глубина DFS {depthLimit}</span>
@@ -56,6 +63,7 @@ export function SolverPanel({
             max="80"
             min="0"
             onChange={(event) => onDepthLimitChange(Number(event.target.value))}
+            style={{ '--range-progress': depthProgress } as CSSProperties}
             type="range"
             value={depthLimit}
           />
@@ -68,21 +76,22 @@ export function SolverPanel({
             min="180"
             onChange={(event) => onSpeedChange(Number(event.target.value))}
             step="20"
+            style={{ '--range-progress': speedProgress } as CSSProperties}
             type="range"
             value={speed}
           />
         </label>
 
         <div className="compare-strip">
-          <SolverBadge result={bfsResult} title="BFS" />
-          <SolverBadge result={dfsResult} title="DFS" />
+          <SolverBadge icon={Network} result={bfsResult} title="BFS" />
+          <SolverBadge icon={GitBranch} result={dfsResult} title="DFS" />
         </div>
 
         <div className="insights">
-          <Metric label="BFS глубина" value={bfsResult ? bfsResult.depth : 'нет'} />
-          <Metric label="DFS глубина" value={dfsResult ? dfsResult.depth : 'нет'} />
-          <Metric label="BFS время" value={bfsResult ? `${bfsResult.elapsedMs} мс` : 'нет'} />
-          <Metric label="DFS время" value={dfsResult ? `${dfsResult.elapsedMs} мс` : 'нет'} />
+          <Metric icon={Route} label="BFS глубина" value={bfsResult ? bfsResult.depth : 'нет'} />
+          <Metric icon={Footprints} label="DFS глубина" value={dfsResult ? dfsResult.depth : 'нет'} />
+          <Metric icon={Timer} label="BFS время" value={bfsResult ? `${bfsResult.elapsedMs} мс` : 'нет'} />
+          <Metric icon={Clock3} label="DFS время" value={dfsResult ? `${dfsResult.elapsedMs} мс` : 'нет'} />
         </div>
       </div>
 
@@ -106,10 +115,21 @@ export function SolverPanel({
   )
 }
 
-function SolverBadge({ result, title }: { result: SolverResponse | null; title: Algorithm }) {
+function SolverBadge({
+  icon: Icon,
+  result,
+  title,
+}: {
+  icon: ComponentType<{ size?: number; strokeWidth?: number }>
+  result: SolverResponse | null
+  title: Algorithm
+}) {
   return (
     <article className="solver-badge">
-      <span>{title}</span>
+      <div className="card-icon-row">
+        <Icon size={20} strokeWidth={2.3} />
+        <span>{title}</span>
+      </div>
       <strong>{result ? `${result.depth} ходов` : 'ожидает'}</strong>
       <small>{result ? `${result.visitedCount} состояний` : 'запусти алгоритм'}</small>
     </article>
